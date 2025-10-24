@@ -39,7 +39,7 @@ ColumnLayout {
         duration: 1000
         easing.type: Easing.InOutQuad
     }
-    
+
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton
@@ -59,7 +59,7 @@ ColumnLayout {
             hoverAnimation.targets = [canvas, letterlabel]
             hoverAnimation.start();
             rotateAnimation.target = letterlabel
-            rotateAnimation.start();            
+            rotateAnimation.start();
 
         }
 
@@ -67,7 +67,7 @@ ColumnLayout {
             exitAnimation.targets = [canvas, letterlabel]
             exitAnimation.start();
         }
-        
+
         // Change the cursor
         cursorShape: Qt.PointingHandCursor
     }
@@ -95,7 +95,7 @@ ColumnLayout {
             SequentialAnimation {
                 running: true
                 loops: Animation.Infinite
-                
+
                 PauseAnimation { duration: 200 }
 
                 OpacityAnimator {
@@ -119,7 +119,7 @@ ColumnLayout {
             id: "letterlabel"
             anchors.centerIn: canvas
             text: "sports_esports"
-            color: gpuDisplay.gpuUsage > 80 ? Matugen.colors.error : 
+            color: gpuDisplay.gpuUsage > 80 ? Matugen.colors.error :
                 gpuDisplay.gpuUsage > 50 ? Matugen.colors.on_tertiary_container : Matugen.colors.on_primary_container
             font.pixelSize: 22
             font.family: "Material Symbols Rounded"
@@ -135,7 +135,7 @@ ColumnLayout {
             anchors.top: temptext.bottom
             anchors.topMargin: 0
             anchors.horizontalCenter: parent.horizontalCenter
-            
+
             property real animatedUsage: 0
 
             NumberAnimation {
@@ -153,21 +153,21 @@ ColumnLayout {
                 var radius = Math.min(width, height) / 2 - 5
                 var startAngle = Math.PI / 2
                 var endAngle = startAngle + (animatedUsage / 100) * 2 * Math.PI
-                
+
                 // Clear canvas
                 ctx.clearRect(0, 0, width, height)
-                
+
                 // Background circle
                 ctx.beginPath()
                 ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI)
                 ctx.strokeStyle = Matugen.colors.on_secondary
                 ctx.lineWidth = 3
                 ctx.stroke()
-                
+
                 // GPU usage arc
                 ctx.beginPath()
                 ctx.arc(centerX, centerY, radius, startAngle, endAngle)
-                ctx.strokeStyle = animatedUsage > 80 ? Matugen.colors.error : 
+                ctx.strokeStyle = animatedUsage > 80 ? Matugen.colors.error :
                                 animatedUsage > 50 ? Matugen.colors.on_tertiary_container : Matugen.colors.on_primary_container
                 ctx.lineWidth = 4
                 ctx.lineCap = "round"
@@ -191,7 +191,7 @@ ColumnLayout {
 
     Process {
         id: gpuProcess
-        command: ["/home/b/.config/quickshell/neo/scripts/nvidia.sh"]
+        command: ["/home/b/.config/quickshell/scripts/nvidia.sh"]
         stdout: StdioCollector {
             onStreamFinished: {
                 //console.log(this.text.trim());

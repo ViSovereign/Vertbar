@@ -8,12 +8,12 @@ import Qt5Compat.GraphicalEffects
 import qs
 
 ColumnLayout {
-    id: memDisplay
-    spacing: 2
+    id: cpumemDisplay
+    spacing: 0
 
-    property bool isActive: false
+    property real cpuUsage: 0
     property real memUsage: 0
-    property string memTemp: "?"
+    property string cpuTemp: "?"
 
     PropertyAnimation {
         id: hoverAnimation
@@ -56,39 +56,37 @@ ColumnLayout {
         onReleased: rect.scale = 1.0
 
         onEntered: {
-            // Hover enter animation
-            hoverAnimation.targets = [canvas, letterlabel]
+            hoverAnimation.targets = [canvas1 , canvas2]
             hoverAnimation.start();
             rotateAnimation.target = letterlabel
-            rotateAnimation.start();            
-
+            rotateAnimation.start();
         }
 
         onExited: {
-            // Exit animation
-            exitAnimation.targets = [canvas, letterlabel]
+            exitAnimation.targets = [canvas1 , canvas2]
             exitAnimation.start();
         }
-        
+
         // Change the cursor
         cursorShape: Qt.PointingHandCursor
+
     }
 
     Rectangle {
         id: rect
         width: 40
-        height: 55
+        height: 50
         //color: Matugen.colors.on_primary
         color: "transparent"
         Layout.alignment: Qt.AlignHCenter
         radius: 5
 
-        // MEM temp text (Not really)
+        // Temp Text
         Text {
-            id: "temptext"           
+            id: "temptext"
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
-            text: memDisplay.memTemp + "°"
+            text: cpumemDisplay.cpuTemp + "°"
             color: Matugen.colors.on_background
             font.pixelSize: 12
             font.bold: true
@@ -97,8 +95,8 @@ ColumnLayout {
             SequentialAnimation {
                 running: true
                 loops: Animation.Infinite
-                
-                PauseAnimation { duration: 100 }
+
+                PauseAnimation { duration: 300 }
 
                 OpacityAnimator {
                     target: temptext
@@ -112,19 +110,17 @@ ColumnLayout {
                     to: 1.0
                     duration: 1000
                 }
-                PauseAnimation { duration: 5000 }
             }
-
         }
 
         // MEM percentage text
         Text {
             id: "letterlabel"
-            anchors.centerIn: canvas
-            text: "memory_alt"
-            color: memDisplay.memUsage > 80 ? Matugen.colors.error : 
-                memDisplay.memUsage > 50 ? Matugen.colors.on_tertiary_container : Matugen.colors.on_primary_container
-            font.pixelSize: 22
+            anchors.centerIn: canvas2
+            text: "memory"
+            color: cpumemDisplay.memUsage > 80 ? Matugen.colors.error :
+                cpumemDisplay.memUsage > 50 ? Matugen.colors.on_tertiary_container : Matugen.colors.on_primary_container
+            font.pixelSize: 18
             font.family: "Material Symbols Rounded"
             opacity: 0.75
 
@@ -132,7 +128,7 @@ ColumnLayout {
 
         // Circular progress indicator
         Canvas {
-            id: canvas
+            id: canvas1
             width: parent.width - 0
             height: width
             anchors.top: temptext.bottom
@@ -142,10 +138,10 @@ ColumnLayout {
             property real animatedUsage: 0
 
             NumberAnimation {
-                id: usageAnimation
+                id: usageAnimation1
                 target: canvas
                 property: "animatedUsage"
-                duration: 2000
+                duration: 3000
                 easing.type: Easing.InOutQuad
             }
 
@@ -155,45 +151,108 @@ ColumnLayout {
                 var centerY = height / 2
                 var radius = Math.min(width, height) / 2 - 5
                 var startAngle = Math.PI / 2
-                var endAngle = startAngle + (animatedUsage / 100) * 2 * Math.PI
-                
+                var endAngle = startAngle + (Math.round(cpumemDisplay.cpuUsage) / 100) * 2 * Math.PI
+
                 // Clear canvas
                 ctx.clearRect(0, 0, width, height)
-                
+
                 // Background circle
                 ctx.beginPath()
                 ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI)
                 ctx.strokeStyle = Matugen.colors.on_secondary
                 ctx.lineWidth = 3
                 ctx.stroke()
-                
-                // MEM usage arc
+
+                // Usage Arc
                 ctx.beginPath()
                 ctx.arc(centerX, centerY, radius, startAngle, endAngle)
-                ctx.strokeStyle = animatedUsage > 80 ? Matugen.colors.error : 
-                                animatedUsage > 50 ? Matugen.colors.on_tertiary_container : Matugen.colors.on_primary_container
+                ctx.strokeStyle = cpumemDisplay.cpuUsage > 80 ? Matugen.colors.error :
+                                cpumemDisplay.cpuUsage > 50 ? Matugen.colors.on_tertiary_container : Matugen.colors.on_secondary_container
                 ctx.lineWidth = 4
                 ctx.lineCap = "round"
                 ctx.stroke()
-                
+
             }
 
-            onAnimatedUsageChanged: {
-                requestPaint()
-            }
-
-            // Repaint when MEM usage changes
+            // Repaint when CPU usage changes
             Connections {
-                target: memDisplay
-                function onMemUsageChanged() {
-                    usageAnimation.to = Math.round(memDisplay.memUsage)
-                    usageAnimation.restart()
+                target: cpumemDisplay
+                function oncpuUsageChanged() {
+                    canvas1.requestPaint()
+                }
+            }
+        }
+
+        // Circular progress indicator
+        Canvas {
+            id: canvas2
+            width: parent.width - 9
+            height: width
+            anchors.centerIn: canvas1
+
+            property real animatedUsage: 0
+
+            NumberAnimation {
+                id: usageAnimation2
+                target: canvas
+                property: "animatedUsage"
+                duration: 3000
+                easing.type: Easing.InOutQuad
+            }
+
+            onPaint: {
+                var ctx = getContext("2d")
+                var centerX = width / 2
+                var centerY = height / 2
+                var radius = Math.min(width, height) / 2 - 5
+                var startAngle = Math.PI / 2
+                var endAngle = startAngle + (Math.round(cpumemDisplay.memUsage) / 100) * 2 * Math.PI
+
+                // Clear canvas
+                ctx.clearRect(0, 0, width, height)
+
+                // Background circle
+                ctx.beginPath()
+                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI)
+                ctx.strokeStyle = Matugen.colors.on_secondary
+                ctx.lineWidth = 3
+                ctx.stroke()
+
+                // Usage Arc
+                ctx.beginPath()
+                ctx.arc(centerX, centerY, radius, startAngle, endAngle)
+                ctx.strokeStyle = cpumemDisplay.memUsage > 80 ? Matugen.colors.error :
+                                cpumemDisplay.memUsage > 50 ? Matugen.colors.on_tertiary_container : Matugen.colors.on_secondary_container
+                ctx.lineWidth = 4
+                ctx.lineCap = "round"
+                ctx.stroke()
+
+            }
+
+            // Repaint when CPU usage changes
+            Connections {
+                target: cpumemDisplay
+                function onmemUsageChanged() {
+                    canvas2.requestPaint()
                 }
             }
         }
     }
 
-    // MEM monitoring process
+    // CPU monitoring process
+    Process {
+        id: cpuProcess
+        command: ["sh", "-c", "grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$3+$4+$5)} END {print usage}'"]
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                //console.log(this.text.trim());
+                cpumemDisplay.cpuUsage = this.text.trim();
+            }
+        }
+    }
+
+     // MEM monitoring process
     Process {
         id: memUsage
         command: ["sh", "-c", "free | grep Mem | awk '{usage=($3/$2)*100} END {print usage}'"]
@@ -201,19 +260,19 @@ ColumnLayout {
         stdout: StdioCollector {
             onStreamFinished: {
                 //console.log(this.text.trim());
-                memDisplay.memUsage = this.text.trim();
+                cpumemDisplay.memUsage = this.text.trim();
             }
         }
     }
 
-   // MEM temp process (Ambient)
+    // CPU temp process
     Process {
-        id: memTemp
-        command: ["/home/b/.config/quickshell/neo/scripts/ambtemp.sh"]
-        
+        id: cpuTemp
+        command: ["/home/b/.config/quickshell/scripts/cputemp.sh"]
+
         stdout: StdioCollector {
             onStreamFinished: {
-                memDisplay.memTemp = this.text.trim()
+                cpumemDisplay.cpuTemp = this.text.trim()
             }
         }
     }
@@ -225,16 +284,19 @@ ColumnLayout {
     }
 
     Timer {
-        interval: 1000
+        interval: 1000 * 60
         running: true
         repeat: true
         onTriggered: {
+            cpuProcess.running = true
             memUsage.running = true
-            memTemp.running = true
-        }    }
+            cpuTemp.running = true
+        }
+    }
 
     Component.onCompleted: {
+        cpuProcess.running = true
         memUsage.running = true
-        memTemp.running = true
+        cpuTemp.running = true
     }
 }

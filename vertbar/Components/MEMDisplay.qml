@@ -8,17 +8,17 @@ import Qt5Compat.GraphicalEffects
 import qs
 
 ColumnLayout {
-    id: sysResourceDisplay
-    spacing: 0
+    id: memDisplay
+    spacing: 2
 
-    property bool hoverover: false
-    property real cpuUsage: 0
-    property string cpuTemp: "?"
+    property bool isActive: false
+    property real memUsage: 0
+    property string memTemp: "?"
 
     PropertyAnimation {
         id: hoverAnimation
         property: "scale"
-        to: 1.2
+        to: 1.1
         duration: 250
         easing.type: Easing.InOutQuad
     }
@@ -56,22 +56,22 @@ ColumnLayout {
         onReleased: rect.scale = 1.0
 
         onEntered: {
+            // Hover enter animation
             hoverAnimation.targets = [canvas, letterlabel]
             hoverAnimation.start();
             rotateAnimation.target = letterlabel
             rotateAnimation.start();
-            hoverover = true
+
         }
 
         onExited: {
+            // Exit animation
             exitAnimation.targets = [canvas, letterlabel]
             exitAnimation.start();
-            hoverover = false
         }
 
         // Change the cursor
         cursorShape: Qt.PointingHandCursor
-
     }
 
     Rectangle {
@@ -83,12 +83,12 @@ ColumnLayout {
         Layout.alignment: Qt.AlignHCenter
         radius: 5
 
-        // CPU temp text
+        // MEM temp text (Not really)
         Text {
             id: "temptext"
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
-            text: sysResourceDisplay.cpuTemp + "°"
+            text: memDisplay.memTemp + "°"
             color: Matugen.colors.on_background
             font.pixelSize: 12
             font.bold: true
@@ -98,7 +98,7 @@ ColumnLayout {
                 running: true
                 loops: Animation.Infinite
 
-                PauseAnimation { duration: 0 }
+                PauseAnimation { duration: 100 }
 
                 OpacityAnimator {
                     target: temptext
@@ -114,15 +114,16 @@ ColumnLayout {
                 }
                 PauseAnimation { duration: 5000 }
             }
+
         }
 
-        // CPU percentage text
+        // MEM percentage text
         Text {
             id: "letterlabel"
             anchors.centerIn: canvas
-            text: "memory"
-            color: sysResourceDisplay.cpuUsage > 80 ? Matugen.colors.error :
-                sysResourceDisplay.cpuUsage > 50 ? Matugen.colors.on_tertiary_container : Matugen.colors.on_primary_container
+            text: "memory_alt"
+            color: memDisplay.memUsage > 80 ? Matugen.colors.error :
+                memDisplay.memUsage > 50 ? Matugen.colors.on_tertiary_container : Matugen.colors.on_primary_container
             font.pixelSize: 22
             font.family: "Material Symbols Rounded"
             opacity: 0.75
@@ -166,7 +167,7 @@ ColumnLayout {
                 ctx.lineWidth = 3
                 ctx.stroke()
 
-                // CPU usage arc
+                // MEM usage arc
                 ctx.beginPath()
                 ctx.arc(centerX, centerY, radius, startAngle, endAngle)
                 ctx.strokeStyle = animatedUsage > 80 ? Matugen.colors.error :
@@ -181,39 +182,38 @@ ColumnLayout {
                 requestPaint()
             }
 
-            // Repaint when CPU usage changes
+            // Repaint when MEM usage changes
             Connections {
-                target: sysResourceDisplay
-                function onCpuUsageChanged() {
-                    usageAnimation.to = Math.round(sysResourceDisplay.cpuUsage)
+                target: memDisplay
+                function onMemUsageChanged() {
+                    usageAnimation.to = Math.round(memDisplay.memUsage)
                     usageAnimation.restart()
                 }
             }
         }
     }
 
-    // CPU monitoring process
+    // MEM monitoring process
     Process {
-        id: cpuProcess
-        //command: ["sh", "-c", "grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$3+$4+$5)} END {print usage}'"]
-        command: ["sh", "-c", "awk '/^cpu / {usage=($2+$4+$6)*100/($2+$3+$4+$5+$6+$7+$8+$9+$10)} END {print usage}' /proc/stat"]
+        id: memUsage
+        command: ["sh", "-c", "free | grep Mem | awk '{usage=($3/$2)*100} END {print usage}'"]
 
         stdout: StdioCollector {
             onStreamFinished: {
                 //console.log(this.text.trim());
-                sysResourceDisplay.cpuUsage = this.text.trim();
+                memDisplay.memUsage = this.text.trim();
             }
         }
     }
 
-    // CPU temp process
+   // MEM temp process (Ambient)
     Process {
-        id: cpuTemp
-        command: ["/home/b/.config/quickshell/neo/scripts/cputemp.sh"]
+        id: memTemp
+        command: ["/home/b/.config/quickshell/scripts/ambtemp.sh"]
 
         stdout: StdioCollector {
             onStreamFinished: {
-                sysResourceDisplay.cpuTemp = this.text.trim()
+                memDisplay.memTemp = this.text.trim()
             }
         }
     }
@@ -221,7 +221,7 @@ ColumnLayout {
     // On Click Action
     Process {
         id: onClick
-        command: ["sh", "-c", "alacritty -e btop"]
+        command: ["sh", "-c", "missioncenter"]
     }
 
     Timer {
@@ -229,13 +229,12 @@ ColumnLayout {
         running: true
         repeat: true
         onTriggered: {
-            cpuProcess.running = true
-            cpuTemp.running = true
-        }
-    }
+            memUsage.running = true
+            memTemp.running = true
+        }    }
 
     Component.onCompleted: {
-        cpuProcess.running = true
-        cpuTemp.running = true
+        memUsage.running = true
+        memTemp.running = true
     }
 }

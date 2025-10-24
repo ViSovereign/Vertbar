@@ -125,18 +125,21 @@ PanelWindow {
             MEMDisplay {
                 id: memDisplay
                 Layout.alignment: Qt.AlignHCenter
+                Layout.topMargin: 5
                 opacity: 0.0
             }
 
             GPUDisplay {
                 id: gpuDisplay
                 Layout.alignment: Qt.AlignHCenter
+                Layout.topMargin: 5
                 opacity: 0.0
             }
 
              DisksDisplayAnimate {
                 id: diskDisplay
                 Layout.alignment: Qt.AlignHCenter
+                Layout.topMargin: 5
                 onDirectoryRequested: directoryPopup.toggle()
                 opacity: 0.0
             }
@@ -190,6 +193,7 @@ PanelWindow {
                 onOpenMixerRequested: mixerPopup.toggle()
                 barWidth: vertbar.width
                 Layout.alignment: Qt.AlignHCenter
+                Layout.bottomMargin: 5
                 opacity: 0.0
             }
 
@@ -197,12 +201,14 @@ PanelWindow {
                 id: micDisplay
                 barWidth: vertbar.width
                 Layout.alignment: Qt.AlignHCenter
+                Layout.bottomMargin: 5
                 opacity: 0.0
             }
 
             UpdatesDisplay {
                 id: updatesDisplay
                 Layout.alignment: Qt.AlignHCenter
+                Layout.bottomMargin: 5
                 opacity: 0.0
             }
 

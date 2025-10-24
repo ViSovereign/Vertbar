@@ -118,7 +118,7 @@ ColumnLayout {
             SequentialAnimation {
                 running: true
                 loops: Animation.Infinite
-                
+
                 PauseAnimation { duration: 100 }
 
                 OpacityAnimator {
@@ -141,7 +141,7 @@ ColumnLayout {
 
 	Process {
 		id: updateProcess
-		command: ["/home/b/.config/quickshell/neo/scripts/updates.sh"]
+		command: ["/home/b/.config/quickshell/scripts/updates.sh"]
 		stdout: StdioCollector {
 			onStreamFinished: updateDisplay.packageCount = this.text, updateDisplay.isLoading = false
 		}
@@ -149,12 +149,12 @@ ColumnLayout {
 
 	Process {
 		id: startUpdateProcess
-		command: ["alacritty", "-e", "/home/b/.config/quickshell/neo/scripts/installupdates.sh"]
+		command: ["alacritty", "-e", "/home/b/.config/quickshell/scripts/installupdates.sh"]
 	}
 
     Timer {
         // Setting the millisecond X 60 to seconds X 60 to minutes
-        interval: 1000 * 60 * 60 
+        interval: 1000 * 60 * 60
         running: true
         repeat: true
         onTriggered: updateProcess.running = true

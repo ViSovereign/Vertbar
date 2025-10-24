@@ -203,7 +203,7 @@ ColumnLayout {
     // Get Monitor Active Workspaces
     Process {
         id: activeWorkspace
-        command: ["/home/b/.config/quickshell/neo/scripts/activeWorkspace.sh"]
+        command: ["/home/b/.config/quickshell/scripts/activeWorkspace.sh"]
 
         stdout: StdioCollector {
             onStreamFinished: {

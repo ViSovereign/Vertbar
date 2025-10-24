@@ -36,12 +36,12 @@ ColumnLayout {
     Rectangle {
         id: rect
         width: 38
-        height: 77
+        height: 75
         color: Matugen.colors.on_primary_container
         Layout.alignment: Qt.AlignHCenter
-        radius: 10
+        radius: 6
         border.color: Matugen.colors.on_secondary
-        border.width: 1
+        border.width: 0
 
         // TIME SECTION
         ColumnLayout {
