@@ -39,46 +39,8 @@ ColumnLayout {
         Layout.alignment: Qt.AlignHCenter
         radius: 5
 
-        Text {
-            anchors.top: parent.top
-            anchors.horizontalCenter: parent.horizontalCenter
-            id: updateText
-            text: updateDisplay.packageCount
-            color: Matugen.colors.on_background
-            font.pixelSize: 12
-            font.bold: true
-            font.family: "MesloLGM Nerd Font Propo"
-            opacity: 1.0
-
-            Behavior on color {
-                ColorAnimation { duration: 250; easing.type: Easing.InOutQuad }
-            }
-
-            SequentialAnimation {
-                running: true
-                loops: Animation.Infinite
-
-                PauseAnimation { duration: 100 }
-
-                OpacityAnimator {
-                    target: updateText
-                    from: 1.0
-                    to: 0.7
-                    duration: 1000
-                }
-                OpacityAnimator {
-                    target: updateText
-                    from: 0.7
-                    to: 1.0
-                    duration: 1000
-                }
-                PauseAnimation { duration: 5000 }
-
-            }
-        }
-
         Item {
-            anchors.bottom: parent.bottom
+            anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
             width: 30
             height: 30
@@ -135,6 +97,44 @@ ColumnLayout {
                 Behavior on color {
                     ColorAnimation { duration: 250; easing.type: Easing.InOutQuad }
                 }
+            }
+        }
+
+        Text {
+            anchors.bottom: parent.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            id: updateText
+            text: updateDisplay.packageCount
+            color: Matugen.colors.on_background
+            font.pixelSize: 12
+            font.bold: true
+            font.family: "MesloLGM Nerd Font Propo"
+            opacity: 1.0
+
+            Behavior on color {
+                ColorAnimation { duration: 250; easing.type: Easing.InOutQuad }
+            }
+
+            SequentialAnimation {
+                running: true
+                loops: Animation.Infinite
+
+                PauseAnimation { duration: 100 }
+
+                OpacityAnimator {
+                    target: updateText
+                    from: 1.0
+                    to: 0.7
+                    duration: 1000
+                }
+                OpacityAnimator {
+                    target: updateText
+                    from: 0.7
+                    to: 1.0
+                    duration: 1000
+                }
+                PauseAnimation { duration: 5000 }
+
             }
         }
     }

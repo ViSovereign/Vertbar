@@ -238,6 +238,6 @@ ColumnLayout {
     // Deep Link to Weather Extension in vicinae
     Process {
         id: deepLinkWeather
-        command: ["sh", "-c", "vicinae vicinae://extensions/tonka3000@raycast/weather/index"]
+        command: ["sh", "-c", "vicinae vicinae://extensions/tonka3000/weather/index"]
     }
 }

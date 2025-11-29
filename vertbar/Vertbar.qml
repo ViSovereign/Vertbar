@@ -110,39 +110,55 @@ PanelWindow {
 
             Layout.alignment: Qt.AlignHCenter
 
-            CPUDisplay {
-                id: cpuDisplay
-                Layout.alignment: Qt.AlignHCenter
-                Layout.topMargin: 10
-                opacity: 0.0
-            }
+            //CPUDisplay {
+            //   id: cpuDisplay
+            //    Layout.alignment: Qt.AlignHCenter
+            //    Layout.topMargin: 10
+            //    opacity: 0.0
+            //}
 
             //CPUMEMDisplay {
             //    id: cpumemDisplay
             //    Layout.alignment: Qt.AlignHCenter
+            //    Layout.topMargin: 10
+            //    opacity: 1.0
             //}
 
-            MEMDisplay {
-                id: memDisplay
+            UpdatesDisplay {
+               id: updatesDisplay
                 Layout.alignment: Qt.AlignHCenter
-                Layout.topMargin: 5
-                opacity: 0.0
+                Layout.topMargin: 10
+                opacity: 1.0
             }
 
-            GPUDisplay {
-                id: gpuDisplay
+            ResourceDisplay {
+                id: resourceDisplayDisplay
                 Layout.alignment: Qt.AlignHCenter
                 Layout.topMargin: 5
-                opacity: 0.0
+                opacity: 1.0
             }
 
-             DisksDisplayAnimate {
-                id: diskDisplay
-                Layout.alignment: Qt.AlignHCenter
-                Layout.topMargin: 5
-                onDirectoryRequested: directoryPopup.toggle()
-                opacity: 0.0
-            }
+            //MEMDisplay {
+            //    id: memDisplay
+            //    Layout.alignment: Qt.AlignHCenter
+            //    Layout.topMargin: 5
+            //    opacity: 0.0
+            //}
+
+            //GPUDisplay {
+            //    id: gpuDisplay
+            //    Layout.alignment: Qt.AlignHCenter
+            //    Layout.topMargin: 5
+            //    opacity: 1.0
+            //}
+
+            //DisksDisplayAnimate {
+            //    id: diskDisplay
+            //    Layout.alignment: Qt.AlignHCenter
+            //    Layout.topMargin: 5
+            //    onDirectoryRequested: directoryPopup.toggle()
+            //    opacity: 0.0
+            //}
 
             DirectoryPopup { id: directoryPopup }
 
@@ -188,38 +204,45 @@ PanelWindow {
             }
             Layout.alignment: Qt.AlignHCenter
 
-            VolumeDisplay {
-                id: volumeDisplay
-                onOpenMixerRequested: mixerPopup.toggle()
-                barWidth: vertbar.width
-                Layout.alignment: Qt.AlignHCenter
-                Layout.bottomMargin: 5
-                opacity: 0.0
-            }
+            //VolumeDisplay {
+            //    id: volumeDisplay
+            //    onOpenMixerRequested: mixerPopup.toggle()
+            //    barWidth: vertbar.width
+            //    Layout.alignment: Qt.AlignHCenter
+            //    Layout.bottomMargin: 5
+            //    opacity: 1.0
+            //}
 
-            MicDisplay {
-                id: micDisplay
-                barWidth: vertbar.width
-                Layout.alignment: Qt.AlignHCenter
-                Layout.bottomMargin: 5
-                opacity: 0.0
-            }
+            //MicDisplay {
+            //    id: micDisplay
+            //    barWidth: vertbar.width
+            //    Layout.alignment: Qt.AlignHCenter
+            //    Layout.bottomMargin: 5
+            //    opacity: 1.0
+            //}
 
-            UpdatesDisplay {
-                id: updatesDisplay
+            //UpdatesDisplay {
+            //   id: updatesDisplay
+            //    Layout.alignment: Qt.AlignHCenter
+            //    Layout.bottomMargin: 5
+            //    opacity: 0.0
+            //}
+
+            AudioDisplay {
+                id: audioDisplay
                 Layout.alignment: Qt.AlignHCenter
-                Layout.bottomMargin: 5
-                opacity: 0.0
+                Layout.bottomMargin: 10
+                opacity: 1.0
             }
 
             WorkspaceDisplay {
                 id: workspaceDisplay
                 Layout.alignment: Qt.AlignHCenter
                 Layout.bottomMargin: 10
-                opacity: 0.0
+                opacity: 1.0
             }
 
-            MixerPopup { id: mixerPopup }
+            //MixerPopup { id: mixerPopup }
 
         }// END OF BOTTOM
     }

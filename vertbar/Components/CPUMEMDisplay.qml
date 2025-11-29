@@ -242,7 +242,8 @@ ColumnLayout {
     // CPU monitoring process
     Process {
         id: cpuProcess
-        command: ["sh", "-c", "grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$3+$4+$5)} END {print usage}'"]
+        //command: ["sh", "-c", "grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$3+$4+$5)} END {print usage}'"]
+        command: ["sh", "-c", "awk '/^cpu / {usage=($2+$4+$6)*100/($2+$3+$4+$5+$6+$7+$8+$9+$10)} END {print usage}' /proc/stat"]
 
         stdout: StdioCollector {
             onStreamFinished: {
